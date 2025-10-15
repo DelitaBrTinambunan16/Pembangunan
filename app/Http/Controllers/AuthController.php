@@ -33,9 +33,21 @@ class AuthController extends Controller
         $adminPass = 'Delita1234';
 
         if ($username === $adminUser && $password === $adminPass) {
-            return view('auth.success', ['username' => $username]);
-        } else {
-            return redirect('/auth')->with('error', 'Username dan password tidak sesuai.');
+            // Set session and regenerate to prevent fixation
+            $request->session()->put('username', $username);
+            $request->session()->regenerate();
+
+            return redirect()->route('dashboard')->with('info', 'Selamat, kamu berhasil login!');
         }
+
+        return redirect('/auth')->with('error', 'Username dan password tidak sesuai.');
+    }
+
+    // Logout method
+    public function logout(Request $request)
+    {
+        $request->session()->flush();
+        $request->session()->regenerateToken();
+        return redirect()->route('login')->with('info', 'Kamu sudah logout.');
     }
 }
