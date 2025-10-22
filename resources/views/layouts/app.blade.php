@@ -1,95 +1,123 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Pembangunan') }} - @yield('title')</title>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <title>{{ config('app.name', 'Pembangunan') }} - @yield('title')</title>
 
-    <!-- Prefer Vite-built assets (Tailwind + app JS); fall back to CDN and local Argon if present -->
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        <!-- Tailwind CDN fallback -->
-        <script src="https://cdn.tailwindcss.com"></script>
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <!-- Google Fonts & Material Icons -->
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-        <!-- Prefer local Argon CSS in public/assets-admin if available, otherwise small inline fallback -->
-        @if (file_exists(public_path('assets-admin/css/argon-dashboard-tailwind.min.css')))
-            <link href="{{ asset('assets-admin/css/argon-dashboard-tailwind.min.css') }}" rel="stylesheet">
-        @elseif (file_exists(public_path('assets-admin/css/argon-dashboard-tailwind.css')))
-            <link href="{{ asset('assets-admin/css/argon-dashboard-tailwind.css') }}" rel="stylesheet">
-        @else
-            {{-- no local argon css found; small inline fallback so the dashboard remains usable --}}
+        <!-- Bootstrap 5 -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+        <!-- Materially local CSS -->
+        <link href="{{ asset('vendor/materially/css/materially.css') }}" rel="stylesheet">
+        <link rel="icon" href="{{ asset('vendor/materially/favicon.svg') }}" />
+            <!-- Simple custom Materially-like CSS -->
             <style>
-                body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
-                header { background: #0f62fe; }
-                header .font-bold { color: #fff; }
-                aside { background: #ffffff; border-right: 1px solid rgba(0,0,0,0.06); }
-                .shadow-xl { box-shadow: 0 10px 30px rgba(2,6,23,0.08); }
-                .rounded-2xl { border-radius: 1rem; }
-                .bg-white { background-color: #fff; }
-                .text-slate-700 { color: #334155; }
-                .text-white { color: #fff; }
-                .bg-blue-500 { background-color: #3b82f6; }
-                .bg-blue-700 { background-color: #1d4ed8; }
-                .btn { display:inline-block; padding:0.5rem 0.75rem; border-radius:0.375rem; }
-                @media (min-width:1024px) { main { margin-left: 18rem; } }
+                :root{--primary:#1e88e5;--accent:#4fc3f7;--muted:#f5f7fb}
+                body{font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--muted);color:#344054}
+                /* Sidebar */
+                .mat-sidebar{width:260px;position:fixed;top:0;bottom:0;left:0;background:#ffffff;border-right:1px solid rgba(16,24,40,0.04);padding:18px 16px;display:flex;flex-direction:column}
+                .mat-sidebar .nav{margin-top:8px}
+                .mat-sidebar .nav-link{color:#475569;padding:.6rem .75rem;border-radius:8px;margin-bottom:.25rem}
+                .mat-sidebar .nav-link:hover{background:rgba(30,136,229,0.06);color:var(--primary)}
+                .mat-sidebar .nav-link.active{background:linear-gradient(90deg,var(--primary),#1565c0);color:#fff}
+                .brand {display:flex;align-items:center;gap:.6rem;margin-bottom:.25rem}
+                .brand .logo{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--primary),var(--accent));display:inline-block}
+
+                /* Topbar */
+                .mat-topbar{height:64px;position:fixed;left:260px;right:0;top:0;background:linear-gradient(90deg,var(--primary),#1565c0);color:#fff;display:flex;align-items:center;padding:0 1rem;z-index:1030}
+                .mat-topbar .btn-outline-light{opacity:.95}
+
+                /* Content */
+                .mat-content{margin-left:260px;padding-top:88px;padding:1.25rem}
+
+                /* Cards */
+                .card-dash{border-radius:12px;box-shadow:0 10px 30px rgba(2,6,23,0.08);background:#ffffff}
+                .card-dash .h5{font-weight:600}
+
+                /* Footer spacing on desktop */
+                footer{margin-left:260px}
+
+                @media(max-width:991px){
+                    .mat-sidebar{position:relative;width:100%;display:flex}
+                    .mat-topbar{left:0}
+                    .mat-content{margin-left:0;padding-top:140px}
+                    footer{margin-left:0}
+                }
             </style>
-        @endif
-    @endif
 
-    @stack('styles')
-</head>
-<body class="bg-gray-50 text-slate-700">
+        @stack('styles')
+    </head>
+    <body>
 
-    <header class="bg-blue-700 text-white px-6 py-4">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <img src="{{ asset('favicon.ico') }}" alt="logo" class="h-8">
-                <div>
-                    <div class="font-bold">Pembangunan & Monitoring</div>
-                    <div class="text-sm opacity-80">Proyek Bina Desa</div>
+        <!-- Sidebar -->
+            <aside class="mat-sidebar">
+                <div class="brand mb-3">
+                    <img src="{{ asset('vendor/materially/images/logo.svg') }}" alt="logo" style="height:36px" />
+                    <div>
+                        <div class="fw-bold">Materially</div>
+                        <div class="text-muted small">Admin Template</div>
+                    </div>
+                </div>
+
+                    <nav class="nav flex-column">
+                        <a class="nav-link py-2 {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}"><span class="material-icons align-middle">dashboard</span> Dashboard</a>
+                        <a class="nav-link py-2 {{ request()->routeIs('warga.*') ? 'active' : '' }}" href="{{ route('warga.index') }}"><span class="material-icons align-middle">people</span> Data Warga</a>
+                        <a class="nav-link py-2 {{ request()->routeIs('lokasi-proyek.*') ? 'active' : '' }}" href="{{ route('lokasi-proyek.index') }}"><span class="material-icons align-middle">map</span> Lokasi Proyek</a>
+                    </nav>
+
+            <div class="mt-auto pt-3 small text-muted">
+                <div>Halo, <strong>{{ session('username') ?? 'Admin' }}</strong></div>
+            </div>
+        </aside>
+
+        <!-- Topbar -->
+        <header class="mat-topbar">
+            <div class="container-fluid d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="btn btn-outline-light d-md-none" id="matToggle"><span class="material-icons">menu</span></button>
+                            <h5 class="mb-0 text-white">@yield('title', 'Dashboard')</h5>
+                        </div>
+                <div class="d-flex align-items-center gap-2">
+                            <div class="search-wrap me-3 d-none d-md-block">
+                                <input class="search-input" placeholder="Search..." />
+                            </div>
+                            <form action="{{ route('auth.logout') }}" method="POST" style="margin:0">
+                                @csrf
+                                <button type="submit" class="btn btn-light btn-sm">Logout</button>
+                            </form>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="hidden md:block">Halo, <strong>{{ session('username') ?? 'Admin' }}</strong></div>
-                <form action="{{ route('auth.logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Logout</button>
-                </form>
+        </header>
+
+        <!-- Main -->
+            <main class="mat-content">
+                <div class="container-fluid px-3">
+                @if(session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
+                @yield('content')
             </div>
-        </div>
-    </header>
+        </main>
 
-    <main class="relative h-full max-h-screen transition-all duration-200 ease-in-out xl:ml-68 rounded-xl">
-        <div class="max-w-7xl mx-auto p-6">
-            @yield('content')
-        </div>
-    </main>
+        <footer class="text-center text-muted py-3" style="margin-left:260px">
+            &copy; {{ date('Y') }} Pembangunan — Bina Desa
+        </footer>
 
-    <footer class="text-center text-sm text-slate-500 py-6">
-        &copy; {{ date('Y') }} Sistem Pembangunan & Monitoring Proyek Bina Desa
-    </footer>
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.getElementById('matToggle')?.addEventListener('click', function(){
+                document.querySelector('.mat-sidebar')?.classList.toggle('d-none');
+            });
+        </script>
 
-    <!-- Chart.js CDN (used by some widgets) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Prefer local JS from public/js or public/assets-admin/js when available -->
-    @if (file_exists(public_path('js/argon-dashboard-tailwind.js')))
-        <script src="{{ asset('js/argon-dashboard-tailwind.js') }}"></script>
-    @elseif (file_exists(public_path('assets-admin/js/argon-dashboard-tailwind.js')))
-        <script src="{{ asset('assets-admin/js/argon-dashboard-tailwind.js') }}"></script>
-    @endif
-
-    {{-- optional plugins if present --}}
-    @if (file_exists(public_path('js/plugins/chartjs.min.js')))
-        <script src="{{ asset('js/plugins/chartjs.min.js') }}"></script>
-    @elseif (file_exists(public_path('assets-admin/js/plugins/chartjs.min.js')))
-        <script src="{{ asset('assets-admin/js/plugins/chartjs.min.js') }}"></script>
-    @endif
-
-    @stack('scripts')
-</body>
+        @stack('scripts')
+    </body>
 </html>

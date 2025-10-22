@@ -1,0 +1,77 @@
+/* Minimal Materially-like CSS (extracted/simplified) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+:root{--primary:#1e88e5;--accent:#4fc3f7;--muted:#f5f7fb}
+body{font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--muted);color:#344054}
+.mat-sidebar{width:260px;position:fixed;top:0;bottom:0;left:0;background:#ffffff;border-right:1px solid rgba(16,24,40,0.04);padding:18px 16px;display:flex;flex-direction:column}
+/* ensure sidebar stays above topbar so logo is always visible */
+.mat-sidebar{z-index:1100}
+.mat-sidebar .nav{margin-top:8px}
+.mat-sidebar .nav-link{color:#475569;padding:.6rem .75rem;border-radius:8px;margin-bottom:.25rem}
+.mat-sidebar .nav-link:hover{background:rgba(30,136,229,0.06);color:var(--primary)}
+.mat-sidebar .nav-link.active{background:linear-gradient(90deg,var(--primary),#1565c0);color:#fff}
+.brand {display:flex;align-items:center;gap:.6rem;margin-bottom:.25rem;margin-top:6px}
+.brand .logo{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--primary),var(--accent));display:inline-block}
+.mat-topbar{height:64px;position:fixed;left:260px;top:0;background:linear-gradient(90deg,var(--primary),#1565c0);color:#fff;display:flex;align-items:center;padding:0 1rem;z-index:1030;width:calc(100% - 260px);border-top-left-radius:0;border-top-right-radius:6px}
+.mat-topbar .btn-outline-light{opacity:.95}
+.mat-content{margin-left:260px;padding-top:120px;padding:1.25rem;min-height:calc(100vh - 140px)}
+.card-dash{border-radius:12px;box-shadow:0 12px 34px rgba(2,6,23,0.08);background:#ffffff;display:flex;flex-direction:column}
+.card-dash .h5{font-weight:600}
+.card-dash .card-body{flex:1}
+.card-dash{padding:1rem}
+
+/* ensure consistent widget sizes */
+.widget{min-height:100px}
+
+/* chart sizing */
+.card-dash canvas{width:100% !important; height:260px !important}
+.card-dash .small-canvas{height:160px !important}
+footer{margin-left:260px}
+@media(max-width:991px){.mat-sidebar{position:relative;width:100%;display:flex}.mat-topbar{left:0}.mat-content{margin-left:0;padding-top:140px}.footer{margin-left:0}}
+
+
+.materially-favicon{width:28px;height:28px}
+
+/* search box in topbar */
+.mat-topbar .search-wrap{max-width:420px;width:100%}
+.mat-topbar .search-input{width:100%;padding:.45rem .75rem;border-radius:999px;border:0;background:#fff;box-shadow:0 3px 12px rgba(2,6,23,0.06)}
+
+/* widget/cards */
+.widgets-row{display:flex;flex-wrap:wrap;gap:1rem}
+.widget{flex:1 1 220px;padding:1rem;border-radius:12px;background:#fff;box-shadow:0 10px 30px rgba(2,6,23,0.06)}
+.widget .muted{color:#667085;font-size:.85rem}
+
+/* tables and list */
+.table thead th{border-bottom:2px solid rgba(15,23,42,0.06);font-weight:600}
+.table td,.table th{vertical-align:middle}
+
+/* badges */
+.badge{font-weight:600;border-radius:8px;padding:.45rem .6rem}
+
+/* progress */
+.progress{height:8px;border-radius:999px}
+.progress .progress-bar{border-radius:999px}
+
+/* responsive tweaks */
+@media (max-width:991px){
+	.mat-topbar .search-wrap{max-width:200px}
+	.widgets-row{flex-direction:column}
+	.mat-content{padding-top:180px}
+}
+
+/* small utilities */
+.text-muted-small{color:#667085;font-size:.85rem}
+
+/* Quick fixes appended (spacing, charts, header) */
+.mat-content { padding-top:140px; padding-left:24px; padding-right:24px; min-height: calc(100vh - 160px); }
+.mat-topbar { height:64px; line-height:64px; }
+.mat-sidebar { padding-top:84px; }
+.card-dash { padding:1rem; gap:0.5rem; }
+.widget, .card-dash { display:flex; flex-direction:column; justify-content:space-between; }
+.card-dash canvas { width:100% !important; height:260px !important; max-height:360px; }
+.table-responsive { overflow:auto; }
+@media (max-width:991px) {
+	.mat-topbar .search-wrap { display:none; }
+	.mat-content { padding-top:180px; }
+}
+
+
