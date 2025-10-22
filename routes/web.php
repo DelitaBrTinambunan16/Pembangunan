@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\WargaController;
+use App\Http\Controllers\LokasiProyekController;
 
 Route::get('/', function () {
     return redirect('/auth');
@@ -48,5 +50,11 @@ Route::get('/show-csrf', function (Illuminate\Http\Request $request) {
 Route::get('/auth/login', function () {
     return redirect('/auth');
 });
+
+// Resource routes for CRUD
+
+
+Route::resource('warga', WargaController::class);
+Route::resource('lokasi-proyek', LokasiProyekController::class);
 
 
